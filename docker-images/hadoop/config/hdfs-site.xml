@@ -1,0 +1,56 @@
+<configuration>
+    <!-- Số bản sao dữ liệu trên HDFS -->
+    <property>
+        <name>dfs.replication</name>
+        <value>1</value> 
+    </property>
+
+    <!-- Đường dẫn lưu trữ metadata của NameNode -->
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>file:///hadoop/dfs/name</value>
+    </property>
+
+    <!-- Đường dẫn lưu trữ dữ liệu của DataNode -->
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>file:///hadoop/dfs/data</value>
+    </property>
+
+    <!-- Địa chỉ HTTP cho SecondaryNameNode, dùng DNS pod cụ thể -->
+    <property>
+        <name>dfs.namenode.secondary.http-address</name>
+        <value>secondarynamenode:50090</value>
+    </property>
+
+    <!-- Địa chỉ RPC NameNode: phải là pod cụ thể để tránh lỗi bind -->
+    <property>
+        <name>dfs.namenode.rpc-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <property>
+        <name>dfs.namenode.http-bind-host</name>
+        <value>0.0.0.0</value>
+    </property>
+    <!-- Cấu hình số lượng Volume/DataDirs lỗi có thể chấp nhận -->
+    <property>
+        <name>dfs.datanode.failed.volumes.tolerated</name>
+        <value>0</value>
+    </property>
+
+    <!-- Cấu hình port DataNode -->
+    <property>
+        <name>dfs.datanode.address</name>
+        <value>0.0.0.0:50010</value>
+    </property>
+
+    <property>
+        <name>dfs.datanode.http.address</name>
+        <value>0.0.0.0:50075</value>
+    </property>
+
+    <property>
+        <name>dfs.client.use.datanode.hostname</name>
+        <value>true</value>
+    </property>
+</configuration>

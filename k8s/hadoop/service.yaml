@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: namenode
+  namespace: applog
+spec:
+  selector:
+    app: hadoop
+    role: namenode
+  ports:
+  - port: 9000
+    targetPort: 9000
+    protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: secondarynamenode
+  namespace: applog
+spec:
+  selector:
+    app: hadoop
+    role: secondarynamenode
+  ports:
+  - port: 50090
+    targetPort: 50090
+    protocol: TCP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: datanode
+  namespace: applog
+spec:
+  selector:
+    app: hadoop 
+    role: datanode
+  ports:
+  - port: 50010
+    targetPort: 50010
+    protocol: TCP
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: resourcemanager
+  namespace: applog
+spec:
+  selector:
+    app: hadoop 
+    role: resourcemanager
+  ports:
+  - port: 8088
+    targetPort: 8088
+    protocol: TCP
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodemanager
+  namespace: applog
+spec:
+  selector:
+    app: hadoop
+    role: nodemanager
+  ports:
+  - protocol: TCP
+    port: 8042
+    targetPort: 8042

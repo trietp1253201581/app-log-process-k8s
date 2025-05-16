@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hadoop-datanode
+  namespace: applog
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      role: datanode
+  serviceName: "datanode"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        role: datanode
+    spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+      - name: init-chown
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000:1000 /hadoop/dfs/data"]
+        volumeMounts:
+        - name: datanode-storage
+          mountPath: /hadoop/dfs/data
+      containers:
+      - name: datanode
+        image: custom-hadoop:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsGroup: 1000
+          runAsUser: 1000
+        ports:
+        - containerPort: 50010
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "150m"
+          limits:
+            memory: "256Mi"
+            cpu: "300m"
+        volumeMounts:
+        - name: datanode-storage
+          mountPath: /hadoop/dfs/data
+        - name: hadoop-config-volume
+          mountPath: /opt/hadoop/etc/hadoop
+        env:
+        - name: HADOOP_CONF_DIR
+          value: /opt/hadoop/etc/hadoop
+        command: ["/entrypoint.sh"]
+      volumes:
+      - name: hadoop-config-volume
+        configMap: 
+          name: hadoop-config
+  volumeClaimTemplates:
+  - metadata:
+      name: datanode-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi

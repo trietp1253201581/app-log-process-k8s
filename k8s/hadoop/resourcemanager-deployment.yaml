@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yarn-resourcemanager
+  namespace: applog
+spec:
+  selector:
+    matchLabels:
+      app: hadoop
+      role: resourcemanager 
+  template:
+    metadata:
+      labels:
+        app: hadoop 
+        role: resourcemanager
+    spec:
+      securityContext:
+        fsGroup: 1000
+      containers:
+      - name: resourcemanager 
+        image: custom-hadoop:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8088  # RM UI
+          - containerPort: 8032
+        securityContext:
+          runAsGroup: 1000
+          runAsUser: 1000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "300m"
+        volumeMounts:
+        - name: hadoop-config-volume
+          mountPath: /opt/hadoop/etc/hadoop
+        env:
+        - name: HADOOP_CONF_DIR
+          value: /opt/hadoop/etc/hadoop
+        command: ["/entrypoint.sh"]
+      volumes:
+      - name: hadoop-config-volume
+        configMap: 
+          name: hadoop-config

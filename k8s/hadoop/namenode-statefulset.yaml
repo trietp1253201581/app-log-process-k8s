@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hadoop-namenode
+  namespace: applog
+spec:
+  selector:
+    matchLabels:
+      app: hadoop 
+      role: namenode
+  serviceName: "namenode"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hadoop
+        role: namenode
+    spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+      - name: init-chown
+        image: busybox
+        command: ["sh", "-c", "chown -R 1000:1000 /hadoop/dfs/name"]
+        volumeMounts:
+        - name: namenode-storage
+          mountPath: /hadoop/dfs/name
+      containers:
+      - name: namenode
+        image: custom-hadoop:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+        - containerPort: 9870
+        securityContext:
+          runAsGroup: 1000
+          runAsUser: 1000
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "400m"
+        volumeMounts:
+        - name: namenode-storage
+          mountPath: /hadoop/dfs/name
+        - name: hadoop-config-volume
+          mountPath: /opt/hadoop/etc/hadoop
+        env:
+        - name: HADOOP_CONF_DIR
+          value: /opt/hadoop/etc/hadoop
+        command: ["/entrypoint.sh"]
+      volumes:
+      - name: hadoop-config-volume
+        configMap: 
+          name: hadoop-config
+  volumeClaimTemplates:
+  - metadata:
+      name: namenode-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 3Gi

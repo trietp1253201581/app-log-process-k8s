@@ -1,0 +1,14 @@
+<configuration>
+    <!-- Xác định framework MapReduce là YARN -->
+    <property>
+        <name>mapreduce.framework.name</name>
+        <value>yarn</value>
+    </property>
+
+    <!-- Địa chỉ ResourceManager -->
+    <property>
+        <name>yarn.resourcemanager.address</name>
+        <value>resourcemanager-0.resourcemanager.applog.svc.cluster.local:8032</value>
+    </property>
+
+</configuration>
