@@ -12,17 +12,27 @@
     </property>
     <property>
         <name>yarn.resourcemanager.address</name>
-        <value>0.0.0.0:8032</value>
+        <value>resourcemanager:8032</value>
     </property>
 
     <property>
         <name>yarn.resourcemanager.scheduler.address</name>
-        <value>0.0.0.0:8030</value>
+        <value>resourcemanager:8030</value>
     </property>
 
     <property>
         <name>yarn.resourcemanager.webapp.address</name>
-        <value>0.0.0.0:8088</value>
+        <value>resourcemanager:8088</value>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.admin.address</name>
+        <value>resourcemanager:8033</value>
+    </property>
+
+    <property>
+        <name>yarn.resourcemanager.resource-tracker.address</name>
+        <value>resourcemanager:8031</value>
     </property>
 
     <!-- Cấu hình auxiliary service cho NodeManager -->
@@ -39,7 +49,7 @@
     <!-- Giới hạn bộ nhớ và CPU của NodeManager -->
     <property>
         <name>yarn.nodemanager.resource.memory-mb</name>
-        <value>2048</value>
+        <value>1024</value>
     </property>
 
     <property>
@@ -50,7 +60,12 @@
     <!-- Scheduler cấu hình -->
     <property>
         <name>yarn.scheduler.maximum-allocation-mb</name>
-        <value>2048</value>
+        <value>1024</value>
+    </property>
+
+    <property>
+        <name>yarn.scheduler.minimum-allocation-mb</name>
+        <value>256</value>
     </property>
 
     <property>

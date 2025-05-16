@@ -22,7 +22,10 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8088  # RM UI
-          - containerPort: 8032
+          - containerPort: 8032  # RPC
+          - containerPort: 8030  # Scheduler
+          - containerPort: 8031  # ResourceManager
+          - containerPort: 8033
         securityContext:
           runAsGroup: 1000
           runAsUser: 1000

@@ -16,21 +16,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: secondarynamenode
-  namespace: applog
-spec:
-  selector:
-    app: hadoop
-    role: secondarynamenode
-  ports:
-  - port: 50090
-    targetPort: 50090
-    protocol: TCP
-
----
-apiVersion: v1
-kind: Service
-metadata:
   name: datanode
   namespace: applog
 spec:
@@ -53,8 +38,21 @@ spec:
     app: hadoop 
     role: resourcemanager
   ports:
-  - port: 8088
-    targetPort: 8088
+  - port: 8032
+    name: resourcemanager-rpc
+    targetPort: 8032
+    protocol: TCP
+  - port: 8030
+    name: resourcemanager-scheduler
+    targetPort: 8030
+    protocol: TCP
+  - port: 8031
+    name: resource-tracker
+    targetPort: 8031
+    protocol: TCP
+  - port: 8033
+    name: admin
+    targetPort: 8033
     protocol: TCP
 
 --- 

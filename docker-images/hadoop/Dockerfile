@@ -31,6 +31,8 @@ COPY config/ $HADOOP_HOME/etc/hadoop/
 COPY scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh && chown hadoop:hadoop /entrypoint.sh
 
+RUN service ssh start
+
 USER hadoop
 WORKDIR /home/hadoop
 
