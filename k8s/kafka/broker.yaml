@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka-broker
+  namespace: applog
+spec:
+  serviceName: "kafka"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka
+      role: broker
+  template:
+    metadata:
+      labels:
+        app: kafka
+        role: broker
+    spec:
+      securityContext:
+        fsGroup: 1001
+      initContainers:
+      - name: init-chown
+        image: busybox
+        command: ["sh", "-c", "chown -R 1001:1001 /bitnami/kafka/data"]
+        volumeMounts:
+        - name: kafka-data
+          mountPath: /bitnami/kafka/data
+      containers:
+      - name: kafka
+        image: custom-kafka:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "300m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        ports:
+        - containerPort: 9092
+        env:
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+          value: "PLAINTEXT"
+        - name: KAFKA_CFG_BROKER_ID
+          value: "0"
+        - name: KAFKA_CFG_LISTENERS
+          value: "PLAINTEXT://0.0.0.0:9092"
+        - name: KAFKA_CFG_ZOOKEEPER_CONNECT
+          value: "zookeeper:2181"
+        - name: KAFKA_CFG_ADVERTISED_LISTENERS
+          value: PLAINTEXT://$(HOSTNAME).kafka.applog.svc.cluster.local:9092
+        - name: KAFKA_CFG_NUM_NETWORK_THREADS
+          value: "1"
+        - name: KAFKA_CFG_NUM_IO_THREADS
+          value: "4"
+        - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+          value: "PLAINTEXT:PLAINTEXT"
+        volumeMounts:
+        - name: kafka-data
+          mountPath: /bitnami/kafka/data
+        securityContext:
+          runAsUser: 1001
+          runAsGroup: 1001
+  volumeClaimTemplates:
+  - metadata:
+      name: kafka-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: applog
+spec:
+  clusterIP: None
+  selector:
+    app: kafka
+    role: broker
+  ports:
+  - port: 9092
+    targetPort: 9092
+    protocol: TCP
