@@ -47,3 +47,30 @@ spec:
       - name: hadoop-config-volume
         configMap: 
           name: hadoop-config
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: resourcemanager
+  namespace: applog
+spec:
+  selector:
+    app: hadoop 
+    role: resourcemanager
+  ports:
+  - port: 8032
+    name: resourcemanager-rpc
+    targetPort: 8032
+    protocol: TCP
+  - port: 8030
+    name: resourcemanager-scheduler
+    targetPort: 8030
+    protocol: TCP
+  - port: 8031
+    name: resource-tracker
+    targetPort: 8031
+    protocol: TCP
+  - port: 8033
+    name: admin
+    targetPort: 8033
+    protocol: TCP

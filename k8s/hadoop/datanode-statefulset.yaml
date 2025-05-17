@@ -62,3 +62,18 @@ spec:
       resources:
         requests:
           storage: 2Gi
+          
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: datanode
+  namespace: applog
+spec:
+  selector:
+    app: hadoop 
+    role: datanode
+  ports:
+  - port: 50010
+    targetPort: 50010
+    protocol: TCP

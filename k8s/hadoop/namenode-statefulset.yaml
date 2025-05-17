@@ -63,3 +63,18 @@ spec:
       resources:
         requests:
           storage: 3Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: namenode
+  namespace: applog
+spec:
+  selector:
+    app: hadoop
+    role: namenode
+  ports:
+  - port: 9000
+    targetPort: 9000
+    protocol: TCP
