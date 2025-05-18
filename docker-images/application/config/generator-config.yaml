@@ -3,5 +3,5 @@ kafka:
   bootstrap-servers: "kafka:9092"
 
 generator:
-  log_rate: 20
-  log_format: "json"
+  log-rate: 20
+  log-format: "json"
