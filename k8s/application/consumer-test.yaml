@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-consumer-test
+  namespace: applog
+spec:
+  containers:
+  - name: kafka-consumer
+    image: bitnami/kafka:3.6.0
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "200m"
+      limits:
+        memory: "256Mi"
+        cpu: "300m"
+    command:
+      - sh
+      - -c
+      - kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic app-logs --from-beginning

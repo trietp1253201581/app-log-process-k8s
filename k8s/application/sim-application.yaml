@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sim-log-generator
+  namespace: applog
+spec:
+  replicas: 2  # giả lập 5 máy gửi log
+  selector:
+    matchLabels:
+      app: application
+      role: sim-log-generator
+  template:
+    metadata:
+      labels:
+        app: application
+        role: sim-log-generator
+    spec:
+      containers:
+      - name: sim-log-generator
+        image: sim-app:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "256Mi"
+            cpu: "300m"
+        volumeMounts:
+        - name: sim-config
+          mountPath: /etc/sim-config   # nơi để file config
+          readOnly: true
+      volumes:
+      - name: sim-config
+        configMap:
+          name: sim-config
