@@ -1,0 +1,7 @@
+kafka:
+  topic: "app-logs"
+  bootstrap-servers: "kafka:9092"
+
+generator:
+  log_rate: 20
+  log_format: "json"
