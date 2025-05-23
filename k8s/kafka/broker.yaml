@@ -21,7 +21,7 @@ spec:
       initContainers:
       - name: init-chown
         image: busybox
-        command: ["sh", "-c", "chown -R 1001:1001 /bitnami/kafka/data"]
+        command: ["sh", "-c", "chown -R 1001:1001 /bitnami/kafka/data "]
         volumeMounts:
         - name: kafka-data
           mountPath: /bitnami/kafka/data
@@ -32,10 +32,10 @@ spec:
         resources:
           requests:
             memory: "512Mi"
-            cpu: "300m"
+            cpu: "200m"
           limits:
             memory: "1Gi"
-            cpu: "500m"
+            cpu: "350m"
         ports:
         - containerPort: 9092
         env:

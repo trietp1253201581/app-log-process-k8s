@@ -9,7 +9,7 @@ spec:
       app: hadoop
       role: datanode
   serviceName: "datanode"
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -37,10 +37,10 @@ spec:
         resources:
           requests:
             memory: "128Mi"
-            cpu: "150m"
+            cpu: "60m"
           limits:
             memory: "256Mi"
-            cpu: "300m"
+            cpu: "120m"
         volumeMounts:
         - name: datanode-storage
           mountPath: /hadoop/dfs/data
