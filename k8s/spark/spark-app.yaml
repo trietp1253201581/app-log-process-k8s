@@ -1,0 +1,39 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: kafka-to-hdfs-stream
+  namespace: applog
+spec:
+  type: Python
+  mode: cluster
+  image: custom-spark:latest
+  imagePullPolicy: IfNotPresent
+  mainApplicationFile: "local:///opt/bitnami/spark/app/streaming_process.py"
+  sparkVersion: "3.5.5"
+  restartPolicy:
+    type: Never
+  driver:
+    cores: 1
+    coreRequest: "200m"
+    coreLimit: "400m"
+    memory: "500m"
+    serviceAccount: spark
+    labels:
+      version: 3.5.5
+      app: kafka-to-hdfs-stream
+      role: driver
+  executor:
+    cores: 1
+    coreRequest: "200m"
+    coreLimit: "400m"
+    instances: 1
+    memory: "500m"
+    labels:
+      version: 3.5.5
+  deps:
+    jars: 
+      - local:///opt/bitnami/spark/jars/spark-sql-kafka-0-10_2.12-3.5.5.jar
+      - local:///opt/bitnami/spark/jars/kafka-clients-3.6.0.jar
+      - local:///opt/bitnami/spark/jars/commons-pool2-2.12.0.jar
+      - local:///opt/bitnami/spark/jars/spark-streaming-kafka-0-10_2.12-3.5.5.jar
+      - local:///opt/bitnami/spark/jars/spark-token-provider-kafka-0-10_2.12-3.5.5.jar

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-to-hdfs-stream-driver-svc
+  namespace: applog
+spec:
+  selector:
+    app: kafka-to-hdfs-stream
+    role: driver
+  ports:
+    - name: driver-rpc
+      port: 7078
+      targetPort: 7078
+    - name: driver-ui
+      port: 4040
+      targetPort: 4040
