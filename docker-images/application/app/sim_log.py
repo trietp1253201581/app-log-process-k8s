@@ -31,10 +31,15 @@ log_rate = config['generator']['log-rate']
 interval = 1.0 / log_rate
 kafka_topic = config['kafka']['topic']
 
+now_time = time.time()
+logs = []
 while True:
     log = simulate_log()
+    logs.append(log)
     try:
-        producer.send(kafka_topic, value=log)
+        if time.time() - now_time >= 10:
+            producer.send(kafka_topic, value=logs)
+            logs.clear()
     except:
         print("Error when send to kafka topic")
     time.sleep(interval)
