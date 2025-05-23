@@ -21,7 +21,13 @@ spec:
       initContainers:
       - name: init-chown
         image: busybox
-        command: ["sh", "-c", "chown -R 1001:1001 /bitnami/kafka/data "]
+        command:
+        - sh
+        - -c
+        - |
+          echo "[init] Checking and cleaning ZooKeeper metadata files";
+          chown -R 1001:1001 /bitnami/kafka/data;
+          rm -f /bitnami/kafka/data/meta.properties;
         volumeMounts:
         - name: kafka-data
           mountPath: /bitnami/kafka/data
