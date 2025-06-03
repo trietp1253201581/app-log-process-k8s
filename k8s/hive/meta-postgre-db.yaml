@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hive-metastore-db
+  namespace: applog
+spec:
+  serviceName: "hive-metastore-db"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hive
+      role: metastore-db
+  template:
+    metadata:
+      labels:
+        app: hive 
+        role: metastore-db
+    spec:
+      containers:
+      - name: postgres-meta-db
+        image: postgres:13
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "150m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: metastore 
+        - name: POSTGRES_USER
+          value: hive 
+        - name: POSTGRES_PASSWORD
+          value: "123456"
+        volumeMounts:
+        - name: metastore-db-data
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: metastore-db-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-metastore-db
+  namespace: applog
+spec:
+  selector:
+    app: hive
+    role: metastore-db
+  ports:
+  - port: 5432
+    targetPort: 5432
+

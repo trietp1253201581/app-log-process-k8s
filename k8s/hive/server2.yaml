@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hive-server2
+  namespace: applog
+spec:
+  selector:
+    matchLabels:
+      app: hive
+      role: server2
+  template:
+    metadata:
+      labels:
+        app: hive
+        role: server2
+    spec:
+      containers:
+      - name: hive-server2
+        image: custom-hive:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        env: 
+        - name: HIVE_ROLE
+          value: server2
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "300m"
+          limits:
+            memory: "1.5Gi"
+            cpu: "450m"
+        ports:
+        - containerPort: 10000
+        volumeMounts:
+        - name: hive-config-volume
+          mountPath: /opt/hive/conf/hive-site.xml
+          subPath: hive-site.xml
+      volumes:
+      - name: hive-config-volume
+        configMap: 
+          name: hive-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-server2
+  namespace: applog
+spec:
+  selector:
+    app: hive
+    role: server2
+  ports:
+  - port: 10000
+    targetPort: 10000
+

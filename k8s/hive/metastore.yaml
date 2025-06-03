@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hive-metastore 
+  namespace: applog
+spec:
+  serviceName: "hive-metastore"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hive 
+      role: metastore
+  template:
+    metadata:
+      labels:
+        app: hive 
+        role: metastore
+    spec:
+      containers:
+      - name: hive-metastore
+        image: custom-hive:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "150m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 9083
+        env:
+        - name: HIVE_ROLE
+          value: metastore
+        volumeMounts:
+        - name: hive-config-volume
+          mountPath: /opt/hive/conf/hive-site.xml
+          subPath: hive-site.xml
+      volumes:
+      - name: hive-config-volume
+        configMap: 
+          name: hive-config
+      - name: metastore-data
+        mountPath: /check
+  volumeClaimTemplates:
+  - metadata:
+      name: metastore-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-metastore
+  namespace: applog
+spec:
+  selector:
+    app: hive
+    role: metastore
+  ports:
+    - port: 9083
+      targetPort: 9083
