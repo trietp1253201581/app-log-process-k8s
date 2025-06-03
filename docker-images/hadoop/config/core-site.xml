@@ -3,4 +3,15 @@
         <name>fs.defaultFS</name>
         <value>hdfs://namenode:9000</value>
     </property>
+
+    
+    <property>
+        <name>hadoop.proxyuser.hive.hosts</name>
+        <value>*</value>
+    </property>
+
+    <property>
+        <name>hadoop.proxyuser.hive.groups</name>
+        <value>*</value>
+    </property>
 </configuration>
