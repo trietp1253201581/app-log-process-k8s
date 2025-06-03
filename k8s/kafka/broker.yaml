@@ -65,6 +65,8 @@ spec:
           value: "4"
         - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
           value: "PLAINTEXT:PLAINTEXT"
+        - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+          value: "false"
         volumeMounts:
         - name: kafka-data
           mountPath: /bitnami/kafka/data
