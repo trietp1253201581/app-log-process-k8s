@@ -39,12 +39,13 @@ spec:
         - name: hive-config-volume
           mountPath: /opt/hive/conf/hive-site.xml
           subPath: hive-site.xml
+        - name: metastore-data
+          mountPath: /check
       volumes:
       - name: hive-config-volume
         configMap: 
           name: hive-config
-      - name: metastore-data
-        mountPath: /check
+      
   volumeClaimTemplates:
   - metadata:
       name: metastore-data
