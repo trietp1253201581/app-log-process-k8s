@@ -108,7 +108,7 @@ docker build -t sim-app:latest docker-images/application
 
 Phần lớn các image đều được build từ bitnami để gọn nhẹ hơn, bạn có thể tự lựa chọn phiên bản phù hợp nhưng cần đảm bảo chúng tương thích với nhau.
 
-Với spark, bạn cũng cần thêm các file JAR cần thiết tương thích với phiên bản bạn chọn. Các file JAR đều có thể được tìm thấy trên Maven Repo hoặc lấy ngay trong repo này, ở [spark_dependencies](docker_images/spark/jars)
+Với spark, bạn cũng cần thêm các file JAR cần thiết tương thích với phiên bản bạn chọn. Các file JAR đều có thể được tìm thấy trên Maven Repo hoặc lấy ngay trong repo này, ở [spark_dependencies](docker-images/spark/jars)
 ### 2. Tạo namespace trên k8s
 Để dễ quản lý hệ thống, nên tạo một namespace riêng trên k8s. Trong project này chúng tôi sử dụng namespace mặc định là `applog`.
 ```bash
